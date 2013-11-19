@@ -61,6 +61,70 @@ end
 {{/user}}
 ```
 
+### Partials
+
+Using the same view class:
+
+``` mustache
+{{ ! app/templates/users/edit.mustache }}
+{{ >form }}
+```
+
+Using a new view class:
+
+``` ruby
+# app/models/user.rb
+class User < ActiveRecord::Base
+  belongs_to :address
+end
+```
+
+``` ruby
+# app/views/user/show.rb
+module Views
+  module User
+    class Show < Layouts::Application
+      def address
+        Views::Address::Show.build(@_view, :address => @user.address)
+      end
+    end
+  end
+end
+```
+
+``` ruby
+# app/views/address/show.rb
+module Views
+  module Address
+    class Show < ActionView::Mustache
+      def street_address
+        content_tag :span do
+          @address.street_address
+        end
+      end
+    end
+  end
+end
+```
+
+In the user template, we get the view object and render the partial.
+Note: we specify the folder for the partial as well but we don't set the underscore.
+``` mustache
+{{ ! app/templates/user/show.mustache ]}
+{{# street_address }}
+{{> address/show }}
+{{/ street_address }}
+```
+
+File is still given the underscore like partials for ERB.
+``` mustache
+{{ ! app/templates/address/_show.mustache }}
+<div id='address'>
+  {{ street_address }}
+  <!-- etc -->
+</div>
+```
+
 ### Optional Configuration
 
 ``` ruby

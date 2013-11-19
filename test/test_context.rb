@@ -25,6 +25,10 @@ class TestContext < MustacheTest
     assert_equal "Hello, Josh!Hello, Chris!\n", @view.render(:template => "section_partial")
   end
 
+  def test_has_people_object
+    assert_equal "Hello, Joel!\n\n", @view.render(:template => 'has_people_object')
+  end
+
   def test_render_nested_objects
     assert_equal "<h1>Category A</h1>\n<h2>Topic 1</h2>\n<h1>Category B</h1>\n",
       @view.render(:template => "nested")
@@ -33,6 +37,14 @@ class TestContext < MustacheTest
   def test_render_with_layout
     assert_equal "<!DOCTYPE html>\n<title>Hello</title>\nHello, World!\n",
       @view.render(:template => "hello", :layout => "application")
+  end
+
+  def test_delegates_view_helpers
+    assert_equal "(<a href=\"x\">x</a>)\n", @view.render(:template => "delegates_view_helpers")
+  end
+
+  def test_delegates_view_helpers_on_partial_mustache
+    assert_equal "(<a href=\"x\">x</a>)\n", @view.render(:template => 'delegates_view_helpers_on_partial_mustache')
   end
 
   def test_template_cache_key

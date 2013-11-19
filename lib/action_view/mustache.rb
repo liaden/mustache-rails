@@ -40,6 +40,16 @@ module ActionView
       context[:yield] = lambda { content_for :layout }
     end
 
+    def self.build(view, ivars = {})
+      item = self.new view
+
+      ivars.each do |key, value|
+          item.instance_variable_set "@#{key}", value
+      end
+
+      item
+    end
+
     # Remove Mustache's render method so ActionView's render can be
     # delegated to.
     undef_method :render
@@ -73,5 +83,6 @@ module ActionView
     def respond_to?(method, include_private = false)
       super || @_view.respond_to?(method, include_private)
     end
+
   end
 end
