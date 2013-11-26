@@ -25,7 +25,7 @@ module ActionView
           if value == true
             yield
           elsif value.is_a?(Proc)
-            buffer.concat(value.call(&block))
+             buffer.concat(value.call{view.capture(&block) }.to_s)
           else
             value = [value] unless value.is_a?(Array) || defined?(Enumerator) && value.is_a?(Enumerator)
             for h in value
